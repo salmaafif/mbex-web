@@ -1,4 +1,4 @@
-import { User } from "../models/User"
+import { User } from "../models/User.js"
 
 //register
 const register = async (req, res) => {
@@ -27,7 +27,27 @@ const login = async (req, res) => {
         res.status(500).json({message : error.message})
     }
 }
+
+const getUser = async (req, res) => {
+  try {
+    const user = await User.find();
+    res.status(200).json(user);
+  } catch (error) {
+    res.status(500).json({ message: "Error fetching users" });
+  }
+};
+const getUserById = async (req, res) => {
+  try {
+    const usergetid = await User.findById(req.params.id);
+    res.status(200).json(usergetid);
+  } catch (error) {
+    res.status(500).json({ message: "Error fetching users" });
+  }
+}
+
 export default {
     register,
-    login
+    login,
+    getUser,
+    getUserById
 }

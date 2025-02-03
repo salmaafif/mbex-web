@@ -4,7 +4,7 @@ const BoothSchema = mongoose.Schema(
     {
         boothname : {
             type : String,
-            required : true
+            required : [true, "pls enter booth"]
         },
         userId : {
             type : mongoose.Schema.Types.ObjectId,
@@ -16,5 +16,5 @@ const BoothSchema = mongoose.Schema(
         timestamps: true
     }
 )
-
-export const Booth = mongoose.model('Booth', BoothSchema)
+const Booth = mongoose.model('Booth', BoothSchema)
+export default Booth
