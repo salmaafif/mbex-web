@@ -27,6 +27,45 @@ const createBooth = async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 };
+const selectBooth = async (req, res) => {
+  const { boothId } = req.body;
+  const userId = req.user.id;
+
+  try {
+    const booth = await Booth.findById(boothId);
+    const user = await User.findById(userId);
+
+    if (!booth) return res.status(404).json({ message: "Booth not found!" });
+    if (!user) return res.status(404).json({ message: "User not found!" });
+
+    // ✅ VALIDASI HOUSE
+    if (booth.house !== user.house) {
+      return res
+        .status(403)
+        .json({
+          message: `Booth hanya bisa dipilih oleh house ${booth.house}`,
+        });
+    }
+
+    if (booth.userId) {
+      return res.status(400).json({ message: "Booth sudah dipilih!" });
+    }
+
+    if (user.selected_booth) {
+      return res.status(400).json({ message: "Kamu sudah memilih booth!" });
+    }
+
+    booth.userId = userId;
+    user.selected_booth = boothId;
+
+    await booth.save();
+    await user.save();
+
+    res.status(200).json({ message: "Booth berhasil dipilih!", booth });
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+};
 
 const updateBooth = async (req, res) => {
   try {
@@ -55,9 +94,10 @@ const deleteBooth = async (req, res) => {
 };
 
 export default {
-    getBooth,
-    getBoothById,
-    createBooth,
-    deleteBooth,
-    updateBooth
-}
+  getBooth,
+  getBoothById,
+  createBooth,
+  deleteBooth,
+  updateBooth,
+  selectBooth
+};

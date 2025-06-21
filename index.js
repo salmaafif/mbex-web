@@ -3,6 +3,7 @@ import {PORT, MongoDB} from './config.js'
 import mongoose from "mongoose"
 import userRoutes from './routes/user-routes.js'
 import boothRoutes from './routes/booth-routes.js'
+import rateLimiter from "./middleware/rateLimiter.js"
 
 const app = express()
 app.use(express.json())
@@ -10,6 +11,7 @@ app.use(express.json())
 app.get('/', (req,res)=> {
     res.send('Hello World')
 })
+app.use(rateLimiter)
 //save user
 app.use("/api/users", userRoutes);
 //booth

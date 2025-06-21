@@ -16,6 +16,11 @@ const UserSchema = mongoose.Schema(
             type: mongoose.Schema.Types.ObjectId,
             ref: 'Booth',
             default: null,
+        },
+        house: {
+            type: String,
+            enum: ['gryffindor', 'ravenclaw', 'syltherin', 'hufflepuff'],
+            required: true,
         }
     },
     {
